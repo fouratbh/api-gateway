@@ -1,31 +1,19 @@
 server:
-  port: 9000 # On change le port du Gateway pour laisser le 8080 libre si besoin
+  port: 9000
 
 spring:
-  application:
-    name: api-gateway
-  cloud:
-    gateway:
-      routes:
-        
-        - id: order-service
-          uri: http://localhost:8081
-          predicates:
-            - Path=/api/orders/**
+cloud:
+gateway:
+routes:
+- id: order-service
+uri: ${ORDER_SERVICE_URL:http://localhost:8081}
+predicates:
+- Path=/api/orders/**
+- id: inventory-service
+  uri: ${INVENTORY_SERVICE_URL:http://localhost:8080}
+  predicates:
+- Path=/api/products/**
 
-       
-        - id: inventory-service
-          uri: http://localhost:8080
-          predicates:
-            - Path=/api/products/**
-
-       
-        - id: notification-service
-          uri: http://localhost:8082
-          predicates:
-            - Path=/api/notifications/**
-
-      
       globalcors:
         cors-configurations:
           '[/**]':
